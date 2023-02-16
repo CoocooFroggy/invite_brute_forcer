@@ -18,8 +18,14 @@ class BruteUtils {
         invite = await targetChannel.createInvite(maxAge: 0, maxUses: 0, unique: true);
         print(invite.code);
         await Future.delayed(Duration(seconds: 3));
-      } catch (e) {
+      } catch (e, st) {
         print(e);
+        print(st);
+        notifyChannel.sendMessage(
+            MessageBuilder.content('Stuttered: $e\n'
+                '```\n'
+                '$st'
+                '```'));
       }
     }
     await notifyChannel.sendMessage(
