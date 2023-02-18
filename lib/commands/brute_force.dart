@@ -25,6 +25,12 @@ final bruteForce = ChatCommand(
       return;
     }
 
+    // Make sure it's not already running
+    if (BruteUtils.isRunning) {
+      await context.respond(MessageBuilder.content('Already running.'));
+      return;
+    }
+
     await context.respond(MessageBuilder.content('Starting...'));
 
     // Run the brute forcer
