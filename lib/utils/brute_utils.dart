@@ -17,12 +17,12 @@ class BruteUtils {
     // If it doesn't match, delete it and generate a new one
     while (invite == null || !regex.hasMatch(invite.code)) {
       try {
+        await Future.delayed(Duration(seconds: 3));
         if (invite != null) {
           await invite.delete();
         }
         invite = await targetChannel.createInvite(maxAge: 0, maxUses: 0, unique: true);
         print(invite.code);
-        await Future.delayed(Duration(seconds: 3));
       } catch (e, st) {
         print(e);
         print(st);
