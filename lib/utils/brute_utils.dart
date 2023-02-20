@@ -28,8 +28,11 @@ class BruteUtils {
         if (regex.hasMatch(invite.code)) {
           await notifyChannel.sendMessage(MessageBuilder.content(
               'Brute forced invite for <#${targetChannel.id}>: ${invite.url}'));
-          // Prevent deletion
-          invite = null;
+          // Without this "if", it would loop forever in regular cycles
+          if (loopForever) {
+            // Prevent deletion
+            invite = null;
+          }
         }
       } catch (e, st) {
         print(e);
