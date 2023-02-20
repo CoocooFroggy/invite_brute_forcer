@@ -9,33 +9,44 @@ class BruteUtils {
     IGuildChannel targetChannel,
     RegExp regex, {
     required ITextGuildChannel notifyChannel,
+    bool loopForever = false,
   }) async {
     isRunning = true;
     // Create the invite
     IInvite? invite =
         await targetChannel.createInvite(maxAge: 0, maxUses: 0, unique: true);
     // If it doesn't match, delete it and generate a new one
-    while (invite == null || !regex.hasMatch(invite.code)) {
+    while (loopForever || invite == null || !regex.hasMatch(invite.code)) {
       try {
         await Future.delayed(Duration(seconds: 3));
         if (invite != null) {
           await invite.delete();
         }
-        invite = await targetChannel.createInvite(maxAge: 0, maxUses: 0, unique: true);
+        invite = await targetChannel.createInvite(
+            maxAge: 0, maxUses: 0, unique: true);
         print(invite.code);
+        if (regex.hasMatch(invite.code)) {
+          await notifyChannel.sendMessage(MessageBuilder.content(
+              'Brute forced invite for <#${targetChannel.id}>: ${invite.url}'));
+          // Prevent deletion
+          invite = null;
+        }
       } catch (e, st) {
         print(e);
         print(st);
-        notifyChannel.sendMessage(
-            MessageBuilder.content('Stuttered: $e\n'
-                '```\n'
-                '$st'
-                '```'));
+        notifyChannel.sendMessage(MessageBuilder.content(
+            // Stuttered on `abc123`
+            // OR
+            // Stuttered on generation
+            'Stuttered on ${(invite != null) ? '`${invite.code}`' : 'generation'}: $e\n'
+            '```\n'
+            '$st'
+            '```'));
         invite = null;
       }
     }
-    await notifyChannel.sendMessage(
-        MessageBuilder.content('Finished brute forcing invite for <#${targetChannel.id}>: ${invite.url}'));
+    await notifyChannel.sendMessage(MessageBuilder.content(
+        'Done.'));
     isRunning = false;
     return;
   }

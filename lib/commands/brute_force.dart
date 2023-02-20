@@ -14,8 +14,12 @@ final bruteForce = ChatCommand(
   'brute-force',
   'Brute force an invite',
   checks: [GuildCheck.all()],
-  id('brute-force',
-      (IChatContext context, IGuildChannel targetChannel, String regex) async {
+  id('brute-force', (
+    IChatContext context,
+    IGuildChannel targetChannel,
+    String regex,
+    bool loopForever,
+  ) async {
     final sourceChannel = context.channel as ITextGuildChannel;
 
     if (targetChannel is! ITextGuildChannel &&
@@ -35,6 +39,6 @@ final bruteForce = ChatCommand(
 
     // Run the brute forcer
     BruteUtils.startBrute(targetChannel, RegExp(regex),
-        notifyChannel: sourceChannel);
+        notifyChannel: sourceChannel, loopForever: loopForever);
   }),
 );
