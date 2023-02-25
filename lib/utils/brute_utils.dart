@@ -37,14 +37,6 @@ class BruteUtils {
       } catch (e, st) {
         print(e);
         print(st);
-        notifyChannel.sendMessage(MessageBuilder.content(
-            // Stuttered on `abc123`
-            // OR
-            // Stuttered on generation
-            'Stuttered on ${(invite != null) ? '`${invite.code}`' : 'generation'}: $e\n'
-            '```\n'
-            '$st'
-            '```'));
         invite = null;
       }
     }
