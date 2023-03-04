@@ -29,8 +29,18 @@ final bruteForce = ChatCommand(
       return;
     }
 
-    // Make sure it's not already running
-    if (BruteUtils.isRunning) {
+    // If the last generated invite is less than a min ago, don't
+    // allow a new one to run.
+    //
+    // Timeline:
+    // -----------------------|------|------
+    //                    Invite     Now
+    // -----|-----------------|------|------
+    // Now - 1 min        Invite     Now
+    //
+    // If invite gen is after now - 1 min, it's still running.
+    if (BruteUtils.lastGenerated
+        .isAfter(DateTime.now().subtract(Duration(minutes: 1)))) {
       await context.respond(MessageBuilder.content('Already running.'));
       return;
     }

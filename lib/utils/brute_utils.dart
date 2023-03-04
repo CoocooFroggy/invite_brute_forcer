@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:nyxx/nyxx.dart';
 
 class BruteUtils {
-  static bool isRunning = false;
+  static late DateTime lastGenerated;
 
   static Future<void> startBrute(
     IGuildChannel targetChannel,
@@ -11,7 +11,7 @@ class BruteUtils {
     required ITextGuildChannel notifyChannel,
     bool loopForever = false,
   }) async {
-    isRunning = true;
+    lastGenerated = DateTime.now();
     // Create the invite
     IInvite? invite =
         await targetChannel.createInvite(maxAge: 0, maxUses: 0, unique: true);
@@ -42,7 +42,6 @@ class BruteUtils {
     }
     await notifyChannel.sendMessage(MessageBuilder.content(
         'Done.'));
-    isRunning = false;
     return;
   }
 }
