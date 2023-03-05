@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:nyxx/nyxx.dart';
 
 class BruteUtils {
-  static late DateTime lastGenerated;
+  static var lastGenerated = DateTime.now();
 
   static Future<void> startBrute(
     IGuildChannel targetChannel,
